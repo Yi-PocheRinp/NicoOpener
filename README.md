@@ -1,0 +1,2 @@
+# NiconicoOpener
+ブラウザで見つけたNiconicoのコンテンツをアプリで視聴するブラウザ拡張機能
