@@ -1,0 +1,28 @@
+{
+
+  "manifest_version": 2,
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
+  "version": "1.0",
+
+  "homepage_url": "https://github.com/tor4kichi/NiconicoOpener",
+  "applications": {
+    "gecko": {
+      "id": "nico-opener@tor4kichi"
+    }
+  },
+
+  "permissions": [
+    "http://*/*",
+    "https://*/*",
+    "tabs",
+    "contextMenus",
+    "webNavigation"
+  ],
+
+  "background": {
+    "scripts": ["background/background.js"]
+  },
+
+  "default_locale": "ja"
+}
