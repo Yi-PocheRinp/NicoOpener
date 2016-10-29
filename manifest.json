@@ -21,7 +21,7 @@
   ],
 
   "background": {
-    "scripts": ["background/background.js"]
+    "scripts": ["niconico.js", "background/ContextMenuAction.js"]
   },
 
   "default_locale": "ja"
