@@ -3,15 +3,47 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="history.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/mdl/material.min.css">
+    <script src="../assets/mdl/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </head>
 
-  <body>
-    <P id="content_id" ></p>
-    <a id="play">再生</a>
-    <div></div>
-    <a id="add_to_playlist">プレイリストに追加</a>
-    <div></div>
+
+  <body style="width:260px; height:140px;">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+          <span class="mdl-layout-title" id="content_id"></span>
+          <!-- Add spacer, to align navigation to the right -->
+          <div class="mdl-layout-spacer"></div>
+        </div>
+      </header>
+      <main class="mdl-layout__content">
+        <div class="page-content">
+          <a id="play" >
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect" 
+                    style="width:100%;"
+                    >
+              再生
+            </button>
+          </a>
+          <div></div>
+          
+          <a id="add_to_playlist">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect"
+                    style="width:100%;"
+                    >
+              プレイリストに追加
+            </button>
+          </a>
+          <div></div>
+        </div>
+      </main>
+    </div>
+    
+    
     <script src="../niconico.js"></script>
     <script src="NiconicoPageAction.js"></script>
   </body>
