@@ -21,7 +21,21 @@
   ],
 
   "background": {
-    "scripts": ["niconico.js", "background/ContextMenuAction.js"]
+    "scripts": [
+      "niconico.js",
+       "background/ContextMenuAction.js",
+       "background/NiconicoPageAction.js"
+       ]
+  },
+
+  "page_action": {
+    "browser_style": true,
+    "default_icon": {
+      "19": "button/geo-19.png",
+      "38": "button/geo-38.png"
+    },
+    "default_title": "Nico Opener",
+    "default_popup": "popup/NiconicoPageAction.html"
   },
 
   "default_locale": "ja"

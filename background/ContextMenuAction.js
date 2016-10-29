@@ -35,13 +35,15 @@ chrome.contextMenus.create({
   onclick : (info, tab) => 
 	{
 		console.log(info.linkUrl);
-		var niconicoUri = convertToNiconicoProtocolUrl(info.linkUrl);
+		var options = new NiconicoSchemeOptions();
+		options.AddToPlaylist = true;
+
+		var niconicoUri = convertToNiconicoProtocolUrl(info.linkUrl, options);
 		if (niconicoUri != null)
 		{
-			var niconicoUriWithAddPlaylist = niconicoUri + "?addplaylist=1"; 
-			console.log("[Add Playlist] " + niconicoUriWithAddPlaylist);
+			console.log("[Add Playlist] " + niconicoUri);
 
-			OpenNiconicoProtocol(niconicoUriWithAddPlaylist);
+			OpenNiconicoProtocol(niconicoUri);
 		}
 	}
 });

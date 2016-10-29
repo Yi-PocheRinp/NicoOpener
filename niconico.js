@@ -1,3 +1,5 @@
+
+
 const NiconicoScheme = "niconico://";
 const NiconicoPrefixList = ["sm", "lv", "so"];
 const NiconicoPrefixListRegexStr = NiconicoPrefixList.join("|");
@@ -8,14 +10,35 @@ const NiocvideoShortContentIdRegex = new RegExp("https?:\\/\\/nico.ms\\/((?:"+Ni
 
 const TargetUrls = ["*://www.nicovideo.jp/*", "*://live.nicovideo.jp/*", "*://nico.ms/*"];
 
+class NiconicoSchemeOptions 
+{
+	constructor()
+	{
+		this.AddToPlaylist = false;
+
+		this.getQueryText = () => 
+		{
+			var text = "";
+			if (this.AddToPlaylist == true)
+			{
+				text += "addplaylist=1"; 
+			}
+
+			return text;
+		};
+	}
+
+
+	
+}
+
 function isNiconicoUrlWithContentId(url)
 {
-	return NiocvideoContentIdRegex.test(url) || NiocvideoShortContentIdRegex.text(url);
+	return NiocvideoContentIdRegex.test(url) || NiocvideoShortContentIdRegex.test(url);
 }
 
 function extractNiconicoContentId(url)
 {
-	console.log(NiocvideoContentIdRegex);
 	var match = url.match(NiocvideoContentIdRegex);
 	console.log("match -> " + match);
 	if (match != null && match.length >= 2)
@@ -30,20 +53,37 @@ function extractNiconicoContentId(url)
 		return match[1];
 	}
 	return null;
-	
 }
 
-function convertToNiconicoProtocolUrl(url)
+function convertToNiconicoProtocolUrl(url, options)
 {
+	if (options == null || options == undefined) 
+	{
+		options = {};
+	}
+
+	var resultUrl = null;
 	var contentId = extractNiconicoContentId(url);
+	var queryParam = {};
 	if (contentId != null)
 	{
-		return NiconicoScheme + contentId;
+		resultUrl = NiconicoScheme + contentId;
 	}
 	else 
 	{
 		return null;
 	}
+
+	if (Object.is(options, NiconicoSchemeOptions))
+	{
+		var query = options.getQueryText();
+		if (query != null && query != "")
+		{
+			resultUrl += "?" + query;
+		}
+	}
+
+	return resultUrl;
 }
 
 function isNiconicoSchemeUrl(url)
