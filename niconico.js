@@ -56,12 +56,7 @@ function extractNiconicoContentId(url)
 }
 
 function convertToNiconicoProtocolUrl(url, options)
-{
-	if (options == null || options == undefined) 
-	{
-		options = {};
-	}
-
+{	
 	var resultUrl = null;
 	var contentId = extractNiconicoContentId(url);
 	var queryParam = {};
@@ -73,13 +68,15 @@ function convertToNiconicoProtocolUrl(url, options)
 	{
 		return null;
 	}
-
-	if (Object.is(options, NiconicoSchemeOptions))
+	
+	if (options instanceof NiconicoSchemeOptions)
 	{
+		console.log("contain NiconicoSchemeOptions.");
 		var query = options.getQueryText();
 		if (query != null && query != "")
 		{
 			resultUrl += "?" + query;
+			console.log("url with options: " + query);
 		}
 	}
 
