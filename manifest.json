@@ -17,26 +17,37 @@
     "https://*/*",
     "tabs",
     "contextMenus",
-    "webNavigation"
+    "webNavigation",
+    "activeTab"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["*://twitter.com/*"],
+      "js": ["TwitterTimelineInject.js"],
+      "run_at": "document_start"
+    }
   ],
 
   "background": {
     "scripts": [
       "niconico.js",
        "background/ContextMenuAction.js",
-       "background/NiconicoPageAction.js"
+       "background/NiconicoPageAction.js"       
        ]
   },
 
   "page_action": {
     "browser_style": true,
     "default_icon": {
-      "19": "button/geo-19.png",
-      "38": "button/geo-38.png"
+      "19": "assets/icons/nicoopener-icon-19.png",
+      "38": "assets/icons/nicoopener-icon-38.png"
     },
     "default_title": "Nico Opener",
     "default_popup": "popup/NiconicoPageAction.html"
   },
 
-  "default_locale": "ja"
+  "default_locale": "ja",
+
+  "web_accessible_resources": ["assets/icons/button-nicoopener-icon.png"]
 }
