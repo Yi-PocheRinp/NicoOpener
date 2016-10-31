@@ -30,15 +30,19 @@ function setContentId(url)
     playButton.addEventListener("click", (element, ev) => 
     {
         console.log("chrome [Play] " + niconicoUrl );
-        OpenNiconicoProtocol(niconicoUrl);
-        window.close();
+        OpenNiconicoProtocol(niconicoUrl, () => 
+        {
+          window.close();
+        });
     });
     var addToPlaylistButton = document.getElementById("add-to-playlist-button-id");
     add_to_playlist.addEventListener("click", (element, ev) => 
     {
         console.log("chrome [Add Playlist] " + niconicoUrl );
-        OpenNiconicoProtocol(niconicoUrlWithAddToPlaylist);
-        window.close();
+        OpenNiconicoProtocol(niconicoUrlWithAddToPlaylist, () => 
+        {
+          window.close();
+        });
     });
   }
     

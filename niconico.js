@@ -88,7 +88,7 @@ function isNiconicoSchemeUrl(url)
 	return url.startsWith(NiconicoScheme);
 }
 
-function OpenNiconicoProtocol(niconicoUrl)
+function OpenNiconicoProtocol(niconicoUrl, onComplete)
 {
 	var tabCloseTime = 300;
 	if (isIEedge)
@@ -115,41 +115,46 @@ function OpenNiconicoProtocol(niconicoUrl)
 				// すべてのタブを取得して不要なタブを逐次判断する形で回避する 
 				chrome.tabs.query( {}, (tabs) => 
 				{
-						if (tabs && tabs.length)
+					if (tabs && tabs.length)
+					{
+						for (var tabIndex in tabs)
 						{
-							for (var tabIndex in tabs)
+							var tab = tabs[tabIndex];
+							var isRemoveTarget = false;
+							if (tab.url && isNiconicoSchemeUrl(tab.url))
 							{
-								var tab = tabs[tabIndex];
-								var isRemoveTarget = false;
-								if (tab.url && isNiconicoSchemeUrl(tab.url))
+								isRemoveTarget = true;
+							}
+							else if (currentTab.index < tabIndex)
+							{
+								// httpとしてレンダリングが実行されてないページは
+								// tab.urlがabout:blankのままっぽい (firefoxで確認)
+								// 現在のタブより新しく開いたっぽい空ページタブを対象として判断
+								if (tab.url && tab.url == "about:blank")
 								{
 									isRemoveTarget = true;
 								}
-								else if (currentTab.index < tabIndex)
-								{
-									// httpとしてレンダリングが実行されてないページは
-									// tab.urlがabout:blankのままっぽい (firefoxで確認)
-									// 現在のタブより新しく開いたっぽい空ページタブを対象として判断
-									if (tab.url && tab.url == "about:blank")
-									{
-										isRemoveTarget = true;
-									}
-								}
-								
-								if (isRemoveTarget)
-								{
-									chrome.tabs.remove(tab.id, () => 
-									{
-										if (chrome.runtime.lastError) {
-											console.log("failed: " + chrome.runtime.lastError);
-										} else {
-											console.log("removed tab");
-										}
-									});
-								}								
 							}
+							
+							if (isRemoveTarget)
+							{
+								chrome.tabs.remove(tab.id, () => 
+								{
+									if (chrome.runtime.lastError) {
+										console.log("failed: " + chrome.runtime.lastError);
+									} else {
+										console.log("removed tab");
+									}
+								});
+							}								
 						}
+					}
 				});
+
+				if (onComplete != null && onComplete != undefined)
+				{
+					onComplete();
+				}
 			}, tabCloseTime);
 		});
 		
