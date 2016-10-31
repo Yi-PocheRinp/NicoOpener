@@ -10,11 +10,12 @@ const isChrome = isChromium !== null && isChromium !== undefined && vendorName =
 function ModifyTimelineItem(node)
 {
 
+//	console.log("check node" + node);
 
 	var tweetList = node.querySelectorAll(".tweet.has-cards");
-	for (var tweetElem of tweetList)
-	{
-		//console.log("check" + tweetId);
+	Array.prototype.forEach.call(tweetList, function(tweetElem) {
+		
+//		console.log("check tweet" + tweetElem);
 
 		// nico.msでの投稿
 		var urlElem = tweetElem.querySelector('a[data-expanded-url^="http://nico.ms/"]'); 
@@ -31,7 +32,7 @@ function ModifyTimelineItem(node)
 		
 		
 		var shorterUrl = urlElem.getAttribute("data-expanded-url");
-		console.log(shorterUrl);
+//		console.log(shorterUrl);
 		var nicoContentId = shorterUrl.split("/")[3].split("?")[0];
 
 		var niconicoSchemeUrl = "niconico://" + nicoContentId;
@@ -51,11 +52,11 @@ function ModifyTimelineItem(node)
 			{
 				var divIconContainer = document.createElement("div");
 				divIconContainer.setAttribute("class", "IconContainer");
-				divIconContainer.style = "height:16px; width:16px;";
+				divIconContainer.setAttribute("style", "height:16px; width:16px;");
 
-				var iconElem = document.createElement("div");
 				var buttonIconUrl = chrome.extension.getURL('/assets/icons/button-nicoopener-icon.png');
-				iconElem.style = 'position: absolute; background:url(' + buttonIconUrl + '); background-position: left; background-repeat: no-repeat; width:16px; height:16px; ';
+				var iconElem = document.createElement("div");				
+				iconElem.setAttribute("style", 'background-image:url(' + buttonIconUrl + '); background-position: left; background-repeat: no-repeat; width:16px; height:16px; ');
 
 
 				divIconContainer.appendChild(iconElem);
@@ -81,7 +82,8 @@ function ModifyTimelineItem(node)
 		// Note: nioc.ms以外のURL直接のTwitter投稿はコンテンツIDがTwitterTL上で取れないため、対応を見送り
 		// URLを解決して、リダイレクト先のURLを取得、URLがコンテンツIDを含む場合は、ボタン表示、って流れ？
 
-	}
+	});
+
 }
 
 const TwitterStreamObserver = new MutationObserver(function(mutations) {
@@ -92,11 +94,11 @@ const TwitterStreamObserver = new MutationObserver(function(mutations) {
 
 		if (mutation.addedNodes == null) { return; }
 
-		console.log("had added nodes");
-		for (var node of mutation.addedNodes)
-		{
+		console.log("has added nodes");
+		console.log(mutation.addedNodes);
+		Array.prototype.forEach.call(mutation.addedNodes, function(node) {
 			ModifyTimelineItem(node);
-		}
+		});
 	});    
 });
 
@@ -126,10 +128,9 @@ function TwitterTimelineContentModify()
 	// observeに反応しないので、長めに待ってから
 	// チェックする
 	setTimeout(() => {
-		for (var node of streamItemsContainer.children) 
-		{
+		Array.prototype.forEach.call(streamItemsContainer.children, function(node) {
 			ModifyTimelineItem(node);
-		}
+		});
 	}, 3000);
 }
 
@@ -146,10 +147,9 @@ const TwitterDialogElemObserver = new MutationObserver(function(mutations) {
 	{
 		setTimeout(() => 
 		{
-			for (var node of mutations.addedNodes)
-			{
+			Array.prototype.forEach.call(mutations.addedNodes, function(node) {
 				ModifyTimelineItem(node);
-			}
+			});
 		}
 		, 3000);
 	}
