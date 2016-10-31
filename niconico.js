@@ -88,61 +88,72 @@ function isNiconicoSchemeUrl(url)
 	return url.startsWith(NiconicoScheme);
 }
 
-
-function OpenNiconicoProtocol(niocnicoUrl)
+function OpenNiconicoProtocol(niconicoUrl)
 {
-	chrome.tabs.query({ currentWindow: true, active: true }, function (maybeCurrentTab) {
-		var currentTab = maybeCurrentTab[0];
+	var tabCloseTime = 300;
+	if (isIEedge)
+	{
+		tabCloseTime = 20000;
+		console.log("open niconico content with location.assign");
+	}	
+	{
+		console.log("open niconico content with tabs.create");
 
-		// 新しいタブとして開く
-		// niconico://に対応するアプリを選択するよう表示されるはず
-		chrome.tabs.create({url: niocnicoUrl, active:false});
+		chrome.tabs.query({ currentWindow: true, active: true }, function (maybeCurrentTab) {
+			var currentTab = maybeCurrentTab[0];
 
-		// カスタムスキームURLは tabs.create のコールバックが呼ばれない
-		// 少ししてから不要なタブを閉じる処理を実行する
-		setTimeout(function() {
-			// queryに 渡す url がカスタムスキームかつ
-			// host部分がないURLパターンの場合
-			// invalid patternとなり対応していない
-			// すべてのタブを取得して不要なタブを逐次判断する形で回避する 
-			chrome.tabs.query( {}, (tabs) => 
-			{
-					if (tabs && tabs.length)
-					{
-						for (var tabIndex in tabs)
+			// 新しいタブとして開く
+			// niconico://に対応するアプリを選択するよう表示されるはず
+			chrome.tabs.create({url: niconicoUrl, active:false});
+
+			// カスタムスキームURLは tabs.create のコールバックが呼ばれない
+			// 少ししてから不要なタブを閉じる処理を実行する
+			setTimeout(function() {
+				// queryに 渡す url がカスタムスキームかつ
+				// host部分がないURLパターンの場合
+				// invalid patternとなり対応していない
+				// すべてのタブを取得して不要なタブを逐次判断する形で回避する 
+				chrome.tabs.query( {}, (tabs) => 
+				{
+						if (tabs && tabs.length)
 						{
-							var tab = tabs[tabIndex];
-							var isRemoveTarget = false;
-							if (tab.url && isNiconicoSchemeUrl(tab.url))
+							for (var tabIndex in tabs)
 							{
-								isRemoveTarget = true;
-							}
-							else if (currentTab.index < tabIndex)
-							{
-								// httpとしてレンダリングが実行されてないページは
-								// tab.urlがabout:blankのままっぽい (firefoxで確認)
-								// 現在のタブより新しく開いたっぽい空ページタブを対象として判断
-								if (tab.url && tab.url == "about:blank")
+								var tab = tabs[tabIndex];
+								var isRemoveTarget = false;
+								if (tab.url && isNiconicoSchemeUrl(tab.url))
 								{
 									isRemoveTarget = true;
 								}
-							}
-							
-							if (isRemoveTarget)
-							{
-								chrome.tabs.remove(tab.id, () => 
+								else if (currentTab.index < tabIndex)
 								{
-									if (chrome.runtime.lastError) {
-										console.log("failed: " + chrome.runtime.lastError);
-									} else {
-										console.log("removed tab");
+									// httpとしてレンダリングが実行されてないページは
+									// tab.urlがabout:blankのままっぽい (firefoxで確認)
+									// 現在のタブより新しく開いたっぽい空ページタブを対象として判断
+									if (tab.url && tab.url == "about:blank")
+									{
+										isRemoveTarget = true;
 									}
-								});
-							}								
+								}
+								
+								if (isRemoveTarget)
+								{
+									chrome.tabs.remove(tab.id, () => 
+									{
+										if (chrome.runtime.lastError) {
+											console.log("failed: " + chrome.runtime.lastError);
+										} else {
+											console.log("removed tab");
+										}
+									});
+								}								
+							}
 						}
-					}
-			});
-		}, 500);
-	});
+				});
+			}, tabCloseTime);
+		});
+		
+	}
+
 	
 }
