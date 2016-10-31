@@ -90,24 +90,28 @@ function isNiconicoSchemeUrl(url)
 
 function OpenNiconicoProtocol(niconicoUrl, onComplete)
 {
-	var tabCloseTime = 300;
+	console.log("open niconico: " + niconicoUrl);
+	console.log("isEdge : " + isIEedge);
+
+	const tabCloseTime = 300;
+	var tabCreateOption = {url: niconicoUrl, active:false};
 	if (isIEedge)
 	{
-		tabCloseTime = 20000;
-		console.log("open niconico content with location.assign");
+		tabCreateOption.active = true;
 	}	
-	{
-		console.log("open niconico content with tabs.create");
+	
 
-		chrome.tabs.query({ currentWindow: true, active: true }, function (maybeCurrentTab) {
-			var currentTab = maybeCurrentTab[0];
+	chrome.tabs.query({ currentWindow: true, active: true }, function (maybeCurrentTab) {
+		var currentTab = maybeCurrentTab[0];
 
-			// 新しいタブとして開く
-			// niconico://に対応するアプリを選択するよう表示されるはず
-			chrome.tabs.create({url: niconicoUrl, active:false});
+		// 新しいタブとして開く
+		// niconico://に対応するアプリを選択するよう表示されるはず
+		chrome.tabs.create(tabCreateOption);
 
-			// カスタムスキームURLは tabs.create のコールバックが呼ばれない
-			// 少ししてから不要なタブを閉じる処理を実行する
+		// カスタムスキームURLは tabs.create のコールバックが呼ばれない
+		// 少ししてから不要なタブを閉じる処理を実行する
+		//if (false == isIEedge)
+		{
 			setTimeout(function() {
 				// queryに 渡す url がカスタムスキームかつ
 				// host部分がないURLパターンの場合
@@ -155,10 +159,14 @@ function OpenNiconicoProtocol(niconicoUrl, onComplete)
 				{
 					onComplete();
 				}
-			}, tabCloseTime);
-		});
+			}
+			, tabCloseTime
+			);
+		}
 		
-	}
+	});
+	
+	
 
 	
 }
