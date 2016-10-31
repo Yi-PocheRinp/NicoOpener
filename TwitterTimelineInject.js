@@ -151,15 +151,35 @@ const TwitterDocElemObserver = new MutationObserver(function(mutations) {
 	TwitterTimelineContentModify();    
 });
 
+const TwitterDialogElemObserver = new MutationObserver(function(mutations) {
+	console.log("twitter dialog modified.");
+	if (mutations.addedNodes != null)
+	{
+		setTimeout(() => 
+		{
+			for (var node of mutations.addedNodes)
+			{
+				ModifyTimelineItem(node);
+			}
+		}
+		, 3000);
+	}
+});
+
 document.addEventListener("DOMContentLoaded", function(event) {
 
+	// Twitterのタイムラインが含まれる要素の変更をチェックする
+	// （タイムライン→検索結果表示の切り替えなどの時に対応するため）
 	var docElem = document.getElementById("page-container");
-
 	TwitterDocElemObserver.observe(docElem, _ObserveConfig);
 
-	// docが変わったら再度ハンドリング
+	// Twitterのツイートの詳細表示を行うダイアログの要素変更をチェックする
+	//var dialogElem = document.getElementById("PermalinkOverlay-content"); 
+	//TwitterDialogElemObserver.observe(dialogElem, _ObserveConfig);
+
+	// 最初に読み込まれたときはdocElemの更新は発生しないので
+	// 最初だけチェックする
 	TwitterTimelineContentModify();    
-//	TwitterTimelineContentModify();
 });
 
 
