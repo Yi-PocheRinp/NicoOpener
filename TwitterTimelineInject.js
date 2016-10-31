@@ -7,8 +7,6 @@ const isChromium = window.chrome,
 
 const isChrome = isChromium !== null && isChromium !== undefined && vendorName === "Google Inc." && isOpera == false && isIEedge == false; 
 
-const alreadyCheckedTweets = {};
-
 function ModifyTimelineItem(node)
 {
 
@@ -16,13 +14,6 @@ function ModifyTimelineItem(node)
 	var tweetList = node.querySelectorAll(".tweet.has-cards");
 	for (var tweetElem of tweetList)
 	{
-		// 
-		var tweetId = tweetElem.getAttribute("data-item-id");
-		if (alreadyCheckedTweets[tweetId])
-		{
-			return;
-		}
-
 		//console.log("check" + tweetId);
 
 		// nico.msでの投稿
@@ -87,9 +78,6 @@ function ModifyTimelineItem(node)
 		}
 		tweetActionList.appendChild(openWithNicoActionElem);
 		
-		// ツイートアイテムをチェック済みにマーク
-		alreadyCheckedTweets[tweetId] = true;
-
 		// Note: nioc.ms以外のURL直接のTwitter投稿はコンテンツIDがTwitterTL上で取れないため、対応を見送り
 		// URLを解決して、リダイレクト先のURLを取得、URLがコンテンツIDを含む場合は、ボタン表示、って流れ？
 
@@ -148,6 +136,7 @@ function TwitterTimelineContentModify()
 const TwitterDocElemObserver = new MutationObserver(function(mutations) {
 	// docが変わったら再度ハンドリング
 	console.log("twitter doc modified.");
+
 	TwitterTimelineContentModify();    
 });
 
