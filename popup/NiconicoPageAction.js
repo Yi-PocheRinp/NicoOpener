@@ -20,10 +20,38 @@ function setContentId(url)
   var niconicoContentId = extractNiconicoContentId(url);
   var content_id = document.getElementById('content_id');
   content_id.textContent = niconicoContentId;
+
+  console.log("isChrome:" + isChrome);
+  console.log("isEdge:" + isIEedge);
+  if (isChrome || isIEedge)
+  {
+    console.log("chrome or edge popup click handling.");
+    var playButton = document.getElementById("play-button-id");
+    playButton.addEventListener("click", (element, ev) => 
+    {
+        console.log("chrome [Play] " + niconicoUrl );
+        OpenNiconicoProtocol(niconicoUrl, () => 
+        {
+          window.close();
+        });
+    });
+    var addToPlaylistButton = document.getElementById("add-to-playlist-button-id");
+    add_to_playlist.addEventListener("click", (element, ev) => 
+    {
+        console.log("chrome [Add Playlist] " + niconicoUrl );
+        OpenNiconicoProtocol(niconicoUrlWithAddToPlaylist, () => 
+        {
+          window.close();
+        });
+    });
+  }
+    
 }
 
-chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-  var tab = tabs[0];
-  console.log(tab);
-  setContentId(tab.url);
+document.addEventListener('DOMContentLoaded', function() {
+  chrome.tabs.query({ lastFocusedWindow: true, active: true }, function (tabs) {
+    var tab = tabs[0];
+    setContentId(tab.url);
+  });
 });
+

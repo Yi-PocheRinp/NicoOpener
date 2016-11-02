@@ -88,25 +88,37 @@ function isNiconicoSchemeUrl(url)
 	return url.startsWith(NiconicoScheme);
 }
 
-
-function OpenNiconicoProtocol(niocnicoUrl)
+function OpenNiconicoProtocol(niconicoUrl, onComplete)
 {
+	console.log("open niconico: " + niconicoUrl);
+	console.log("isEdge : " + isIEedge);
+
+	const tabCloseTime = 300;
+	var tabCreateOption = {url: niconicoUrl, active:false};
+	if (isIEedge)
+	{
+		tabCreateOption.active = true;
+	}	
+	
+
 	chrome.tabs.query({ currentWindow: true, active: true }, function (maybeCurrentTab) {
 		var currentTab = maybeCurrentTab[0];
 
 		// 新しいタブとして開く
 		// niconico://に対応するアプリを選択するよう表示されるはず
-		chrome.tabs.create({url: niocnicoUrl, active:false});
+		chrome.tabs.create(tabCreateOption);
 
 		// カスタムスキームURLは tabs.create のコールバックが呼ばれない
 		// 少ししてから不要なタブを閉じる処理を実行する
-		setTimeout(function() {
-			// queryに 渡す url がカスタムスキームかつ
-			// host部分がないURLパターンの場合
-			// invalid patternとなり対応していない
-			// すべてのタブを取得して不要なタブを逐次判断する形で回避する 
-			chrome.tabs.query( {}, (tabs) => 
-			{
+		//if (false == isIEedge)
+		{
+			setTimeout(function() {
+				// queryに 渡す url がカスタムスキームかつ
+				// host部分がないURLパターンの場合
+				// invalid patternとなり対応していない
+				// すべてのタブを取得して不要なタブを逐次判断する形で回避する 
+				chrome.tabs.query( {}, (tabs) => 
+				{
 					if (tabs && tabs.length)
 					{
 						for (var tabIndex in tabs)
@@ -141,8 +153,20 @@ function OpenNiconicoProtocol(niocnicoUrl)
 							}								
 						}
 					}
-			});
-		}, 500);
+				});
+
+				if (onComplete != null && onComplete != undefined)
+				{
+					onComplete();
+				}
+			}
+			, tabCloseTime
+			);
+		}
+		
 	});
+	
+	
+
 	
 }
