@@ -46,12 +46,16 @@
         "webNavigation",
         "activeTab"
     ],
-    "version": "1.0",
+    "version": "1.0.2",
     "web_accessible_resources": [
         "assets/icons/button-nicoopener-icon.png"
     ],
     "-ms-preload": {
         "backgroundScript": "backgroundScriptsAPIBridge.js",
         "contentScript": "contentScriptsAPIBridge.js"
+    },
+    "options_ui": {
+        "page": "options/options.html",
+        "open_in_tab": true
     }
 }
