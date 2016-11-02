@@ -1,0 +1,27 @@
+{
+  "extensionName": {
+    "message": "NicoOpener",
+    "description": "Name of the extension."
+  },
+
+  "extensionDescription": {
+    "message": "ニコニコ動画のコンテンツIDをページから見つけて、アプリで開けるようにする拡張機能です",
+    "description": "Description of the add-on."
+  },
+
+  
+  "contextMenuItemNicoOpenRoot": {
+    "message": "ニコニコアプリで…",
+    "description": "... on niconico app"
+  },
+
+   "contextMenuItemPlay": {
+    "message": "再生",
+    "description": "play with niconico app."
+  },
+
+   "contextMenuItemNicoAddToPlaylist": {
+    "message": "プレイリストに追加",
+    "description": "add playlist with niconico app."
+  }
+}
